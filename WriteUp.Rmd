@@ -54,7 +54,7 @@ testing <- testing[,8:59]
 testing$classe <- factor(nrow(testing))
 levels(testing$classe) <- levels(training$classe)
 test2 <- rbind(training[1,], testing)
-test2 <- test2[2:21,]
+test2 <- test2[1:20,]
 ```
 
 Let's show the model predictions on the test dataset.
