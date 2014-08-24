@@ -239,7 +239,7 @@ testing$classe &lt;- factor(nrow(testing))
 levels(testing$classe) &lt;- levels(training$classe)
 test2 &lt;- rbind(training[1,], testing)
 test2 &lt;- test2[2:21,]</code></pre>
-<p>Let’s show the model predictions on the test dataset. Its accuracy in the Programming Assignment was 20/20.</p>
+<p>Let’s show the model predictions on the test dataset.</p>
 <pre class="r"><code>testpred &lt;- predict(model, test2)
 testpred</code></pre>
 <pre><code>##  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 
