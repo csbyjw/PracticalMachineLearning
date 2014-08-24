@@ -1,0 +1,65 @@
+---
+title: "Practical Machine Learning - Project"
+output: html_document
+who: csbyjw
+---
+
+This document will build a prediction model for personal activity from activity tracking devices.
+
+1st, we need to download training and testing datasets to R working directory from the following locations:
+#setwd("~/Documents/Coursera/Data Science/code")
+#https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+#https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+2nd, we load the training dataset into R and confirm the dimensions.
+```{r}
+training <- read.csv("./pml-training.csv")
+dim(training)
+```
+
+Now we can see there are a large number of columns in the dataset. We will check whether all of them are useful or whether some of them contian NA values.
+```{r}
+na <- apply(training, 2, function(x) sum(x %in% c(NA, "")))
+na
+```
+
+There are a large number of variables with missing data. Specifically, in these cases there are
+```{r}
+19216/nrow(training) * 100
+```
+percent of data missing.
+
+We will drop these variables and analyze only complete ones. We will exclude also the first seven variables because they seem to be highly related to the place in the dataset this may cause problems with predicting on test set where they come in different order.
+
+```{r}
+index <- which(na == 0)
+training <- training[,index]
+training <- training[,8:60]
+```
+
+Having cleaned our dataset we next will build a prediction model based on the random forests algorithm. Confusion Matrix of the model is depicted below.
+```{r}
+library(randomForest)
+library(caret)
+model <- randomForest(classe~., data = training)
+pred <- predict(model, training)
+confusionMatrix(training$classe, pred)
+```
+
+Next let's check the model on different dataset. For this we load the test dataset. Next, to make sure we have something comparibe we drop the same variables as in training data and perform necessary transformations because variable classes were different than in the training set.
+```{r}
+testing <- read.csv("./pml-testing.csv")
+testing <- testing[,index]
+testing <- testing[,8:59]
+testing$classe <- factor(nrow(testing))
+levels(testing$classe) <- levels(training$classe)
+test2 <- rbind(training[1,], testing)
+test2 <- test2[2:21,]
+```
+
+Let's show the model predictions on the test dataset. Its accuracy in the Programming Assignment was 20/20.
+
+```{r}
+testpred <- predict(model, test2)
+testpred
+```
