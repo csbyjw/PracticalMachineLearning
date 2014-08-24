@@ -57,7 +57,7 @@ test2 <- rbind(training[1,], testing)
 test2 <- test2[2:21,]
 ```
 
-Let's show the model predictions on the test dataset. Its accuracy in the Programming Assignment was 20/20.
+Let's show the model predictions on the test dataset.
 
 ```{r}
 testpred <- predict(model, test2)
